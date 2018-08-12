@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Remove Printer Management for non-admin users
+/usr/bin/security authorizationdb write system.preferences.printing authenticate-session-owner-or-admin
+
+# Add "everyone" user from group lpadmin, now all users are allowed to install new printers
+/usr/sbin/dseditgroup -o edit -n /Local/Default -a "everyone" -t group lpadmin

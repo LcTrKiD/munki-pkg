@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Remove Printer Management for non-admin users
+/usr/bin/security authorizationdb write system.preferences.printing <<EndOfPlist
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>allow-root</key>
+	<true/>
+	<key>authenticate-user</key>
+	<true/>
+	<key>class</key>
+	<string>user</string>
+	<key>comment</key>
+	<string>Checked by the Admin framework when making changes to the Printing preference pane.</string>
+	<key>created</key>
+	<real>555718826.28702796</real>
+	<key>group</key>
+	<string>admin</string>
+	<key>modified</key>
+	<real>555718826.28702796</real>
+	<key>session-owner</key>
+	<false/>
+	<key>shared</key>
+	<true/>
+	<key>timeout</key>
+	<integer>2147483647</integer>
+	<key>tries</key>
+	<integer>10000</integer>
+	<key>version</key>
+	<integer>0</integer>
+</dict>
+</plist>
+EndOfPlist
+
+# Delete "everyone" user from group lpadmin, now only admin are allowed to install new printers
+/usr/sbin/dseditgroup -o edit -n /Local/Default -d "everyone" -t group lpadmin
